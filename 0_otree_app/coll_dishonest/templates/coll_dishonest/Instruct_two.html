@@ -1,0 +1,66 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree %}
+
+{% block title %}
+    Part 2 - Instructions (Page 2/3)
+{% endblock %}
+
+{% block content %}
+    <style>
+    .otree-timer {
+        display: none;
+    }
+    </style>
+<div class="card card-body bg-light instructions">
+    <ul>
+        <li>
+            One of you (the first mover) will privately roll their die and report about its outcome first.
+        </li>
+        <li>
+            The other (the second mover) will observe what the first mover reported and will roll their own die privately and report about its outcome (see the picture below).
+        </li>
+        <li>
+            The computer randomly assigned who is the first mover and who is the second mover.
+        </li>
+    </ul>
+</div>
+<br>
+    <div align="center">
+        <img width="80%" src="{% static "coll_dishonest/die_roll_picture_b.jpg" %}"/>
+    </div>
+    <br>
+    <p>
+        <b>Please evaluate the following statement to continue.</b>
+    </p>
+    <p>
+        {% formfield player.Instr2 label="The computer randomly assigned who is the first mover and who is the second mover." %}
+    </p>
+    <input type="hidden" name="Instr2_wrong" value="0" id="Instr2_wrong" />
+<br>
+<button onclick="return myFunction()" class="otree-btn-next btn btn-primary">Next</button>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(function () {
+        $('.otree-timer__time-left').on('update.countdown', function (event) {
+            if (event.offset.totalSeconds === 30) {
+                $('.otree-timer').show();
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+function myFunction() {
+    if (document.getElementById('Instr2-1').checked) {
+        alert("Your answer is incorrect. Please read the instructions carefully and provide the correct answer.");
+        $('#Instr2_wrong').val(1);
+        return false;
+    }
+    if (document.getElementById('Instr2-0').checked) {
+        return true;
+    }
+}
+</script>
+{% endblock %}

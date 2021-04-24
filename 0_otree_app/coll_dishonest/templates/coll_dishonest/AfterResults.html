@@ -1,0 +1,54 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Part 2 - Results
+{% endblock %}
+
+{% block content %}
+<br>
+<table class="table">
+    <tr>
+        <th>Your reported outcome</th>
+        <th>Other person’s reported outcome</th>
+        <th>Your earnings</th>
+        <th>Other person’s earnings</th>
+    </tr>
+    {% for p in player.in_all_rounds %}
+        <tr>
+            <td>
+                {% if p.id_in_group == 1 %}
+                    {{ p.group.report_one }}
+                {% else %}
+                    {{ p.group.report_two }}
+                {% endif %}
+            </td>
+            <td>
+                {% if p.id_in_group == 1 %}
+                    {{ p.group.report_two }}
+                {% else %}
+                    {{ p.group.report_one }}
+                {% endif %}
+            </td>
+            <td>
+                {% if p.id_in_group == 1 %}
+                    {{ payoff_part2_one }}
+                {% else %}
+                    {{ payoff_part2_two }}
+                {% endif %}
+            </td>
+            <td>
+                {% if p.id_in_group == 1 %}
+                    {{ payoff_part2_two }}
+                {% else %}
+                    {{ payoff_part2_one }}
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+<br>
+    {% next_button %}
+{% endblock %}
+
+

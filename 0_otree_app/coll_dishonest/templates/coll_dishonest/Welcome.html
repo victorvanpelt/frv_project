@@ -1,0 +1,32 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Part 2 - Welcome
+{% endblock %}
+
+{% block content %}
+    <style>
+    .otree-timer {
+        display: none;
+    }
+    </style>
+    <div class="card card-body bg-light instructions" align="center">
+        Part 1 is now finished and you are about to start part 2 of this study.<br>
+        Please click “Next” to start.
+    </div>
+<br>
+{% next_button %}
+
+{% endblock %}
+{% block scripts %}
+<script>
+    $(function () {
+        $('.otree-timer__time-left').on('update.countdown', function (event) {
+            if (event.offset.totalSeconds === 25) {
+                $('.otree-timer').show();
+            }
+        });
+    });
+</script>
+{% endblock %}

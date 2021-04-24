@@ -1,0 +1,136 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Results - Part 1 and 2
+{% endblock %}
+
+{% block content %}
+    <div class="card card-body bg-light instructions" align="center">
+        <b>Part 1</b>
+    </div>
+    <br>
+    <div align="center">
+        {% if group.winner_part1_one == 1 and player.id_in_group == 1 or group.winner_part1_two == 1 and player.id_in_group == 2 %}
+            You performed better than the other participant on the IQ tasks in part 1.
+        {% elif group.winner_part1_two == 1 and player.id_in_group == 1 or group.winner_part1_one == 1 and player.id_in_group == 2 %}
+            The other participant performed better than you on the IQ tasks in part 1.
+        {% endif %}
+    </div>
+    <br>
+    {% for p in player.in_all_rounds %}
+    {% if p.id_in_group == 1 %}
+    <table class="table">
+    <tr>
+        <th>Your rank</th>
+        <th>Other participant's rank</th>
+        <th>Your earnings</th>
+        <th>Other participant's earnings</th>
+    </tr>
+    <tr>
+        <td>
+            {% if group.winner_part1_one == 1 %}
+                1st
+            {% elif group.winner_part1_one == 0 %}
+                2nd
+            {% endif %}
+        </td>
+        <td>
+            {% if group.winner_part1_two == 1 %}
+                1st
+            {% elif group.winner_part1_two == 0 %}
+                2nd
+            {% endif %}
+        </td>
+        <td>
+            {{ payoff_part1_one }}
+        </td>
+        <td>
+            {{ payoff_part1_two }}
+        </td>
+    </tr>
+    </table>
+    {% elif p.id_in_group == 2 %}
+    <table class="table">
+    <tr>
+        <th>Your rank</th>
+        <th>Other participant's rank</th>
+        <th>Your earnings</th>
+        <th>Other participant's earnings</th>
+    </tr>
+    <tr>
+        <td>
+            {% if group.winner_part1_two == 1 %}
+                1st
+            {% elif group.winner_part1_two == 0 %}
+                2nd
+            {% endif %}
+        </td>
+        <td>
+            {% if group.winner_part1_one == 1 %}
+                1st
+            {% elif group.winner_part1_one == 0 %}
+                2nd
+            {% endif %}
+        </td>
+        <td>
+            {{ payoff_part1_two }}
+        </td>
+        <td>
+            {{ payoff_part1_one }}
+        </td>
+    </tr>
+    </table>
+    {% endif %}
+    {% endfor %}
+    <br>
+    <div class="card card-body bg-light instructions" align="center">
+{#    The table below presents an overview of reported outcomes and earnings in part 2.<br>#}
+    <b>Part 2</b>
+    </div>
+    <br>
+<table class="table">
+    <tr>
+        <th>Your reported outcome</th>
+        <th>Other person’s reported outcome</th>
+        <th>Your earnings</th>
+        <th>Other person’s earnings</th>
+    </tr>
+    {% for p in player.in_all_rounds %}
+        <tr>
+            <td>
+                {% if p.id_in_group == 1 %}
+                    {{ p.group.report_one }}
+                {% else %}
+                    {{ p.group.report_two }}
+                {% endif %}
+            </td>
+            <td>
+                {% if p.id_in_group == 1 %}
+                    {{ p.group.report_two }}
+                {% else %}
+                    {{ p.group.report_one }}
+                {% endif %}
+            </td>
+            <td>
+                {% if p.id_in_group == 1 %}
+                    {{ payoff_part2_one }}
+                {% else %}
+                    {{ payoff_part2_two }}
+                {% endif %}
+            </td>
+            <td>
+                {% if p.id_in_group == 1 %}
+                    {{ payoff_part2_two }}
+                {% else %}
+                    {{ payoff_part2_one }}
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+<br>
+    {% next_button %}
+{% endblock %}
+
+

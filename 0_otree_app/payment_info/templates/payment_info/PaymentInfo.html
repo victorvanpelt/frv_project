@@ -1,0 +1,87 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree %}
+
+{% block title %}
+    Thank you for your participation
+{% endblock %}
+
+{% block content %}
+    {% if no_partner == True %}
+    <div class="card card-body bg-light instructions">
+        <ul>
+        <li>
+            We were unable to match you to the other participant just before part 2.
+        </li>
+        <li>
+            Accordingly, you cannot participate any further.
+        </li>
+        {%  if player.incentives == 0 %}
+        <li>
+            We can pay you the base rate of <b>$0.50</b> plus <b>$0.90</b> for part 1, which totals <b>{{ total_eur }}</b>.
+        </li>
+        {%  elif player.incentives == 1 %}
+        <li>
+            We can pay you the base rate of <b>$0.50</b> plus the average pay (i.e., <b>$0.90</b>) for part 1, which totals <b>{{ total_eur }}</b>.
+        </li>
+        {% endif %}
+        <li>
+            Please do not forget to click "Finish" below and submit the HIT on MTurk!
+        </li>
+        </ul>
+    </div>
+    {% elif is_dropout == True and is_dropout_mate == True or is_dropout == True and is_dropout_mate == False %}
+    <div class="card card-body bg-light instructions">
+        <ul>
+        <li>
+            Your session timed out during part 2.
+        </li>
+        <li>
+            Accordingly, you cannot participate any further.
+        </li>
+        <li>
+            We can pay you <b>{{ total_eur }}</b> which consists of the base rate of <b>$0.50</b> plus any earnings for part 1.
+        </li>
+        <li>
+            Please do not forget to click "Finish" below and submit the HIT on MTurk!
+        </li>
+        </ul>
+    </div>
+    {% elif is_dropout_mate == True and is_dropout == False %}
+    <div class="card card-body bg-light instructions">
+        <ul>
+        <li>
+            The other participant's session timed out during part 2.
+        </li>
+        <li>
+            Accordingly, you cannot participate in this study any further.
+        </li>
+        <li>
+            We can pay <b>{{ total_eur }}</b> which consists of the base rate of <b>$0.50</b> plus any earnings for part 1.
+        </li>
+        <li>
+            Please do not forget to click "Finish" below and submit the HIT on MTurk!
+        </li>
+        </ul>
+    </div>
+    {% else %}
+        <br>
+    <div class="card card-body bg-light instructions">
+        <ul>
+        <li>
+            You completed both parts of this study successfully.
+        </li>
+        <li>
+            Accordingly, you have earned a total of <b>{{ total_eur|to2 }}</b>, which comprises the base rate of <b>$0.50</b> and your earnings in both parts.
+        <li>
+            Please do not forget to click "Finish" below and submit the HIT on MTurk!
+        </li>
+        </ul>
+    </div>
+    {% endif %}
+
+    {% formfield player.mturk_feedback %}
+
+    <button class="otree-btn-next btn btn-primary">Finish!</button>
+
+{% endblock %}
+

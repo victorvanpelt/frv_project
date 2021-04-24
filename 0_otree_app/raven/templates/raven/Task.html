@@ -1,0 +1,40 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Part 1 - IQ task {{ subsession.round_number }} of 10
+{% endblock %}
+
+{% block content %}
+    <br>
+    <div align="center">
+    <img id="image" width="45%" src="" />
+    </div>
+    <div align="center">
+    <p>
+        Please enter the number corresponding to the missing piece in the box below.
+    </p>
+    <p>
+        <input type="number" id="task" name="task" min="1" max="8" step="1">
+    </p>
+    {% next_button %}
+    </div>
+    <input type="hidden" name="check_task" value="" id="id_check_task"/>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var round_number = {{ subsession.round_number }}
+    document.getElementById("image").src ='/static/raven/' + round_number + '.png'
+</script>
+<script>
+	$(document).ready(function () {
+        $('input[name=task]').on('input change', function () {
+            $('input[name=task]').addClass('myclass');
+        });
+	    $('input[name=task]').on('input', function() {
+        	$('#id_check_task').val(1);
+    	});
+    });
+</script>
+{% endblock %}

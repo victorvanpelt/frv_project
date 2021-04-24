@@ -1,0 +1,64 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Results
+{% endblock %}
+
+{% block content %}
+    <div class="card card-body bg-light instructions" align="center">
+    The table below gives you an overview of what happened.<br>
+    </div>
+    <br>
+    {% if Player.incentives == 1 %}
+    <table class="table">
+    <tr>
+        <th>Total number of tasks</th>
+        <th>Number of tasks correct</th>
+        <th>Time remaining</th>
+    </tr>
+    <tr>
+        <td>
+            {{ Constants.num_rounds }}
+        </td>
+        <td>
+            {{ number_correct }}
+        </td>
+        <td>
+            {% if time_left <= 0 %}
+                0 seconds
+            {% else %}
+                {{ time_left|to0 }} seconds
+            {% endif %}
+        </td>
+    </tr>
+    </table>
+    {% elif Player.incentives == 0 %}
+    <table class="table">
+    <tr>
+        <th>Total number of tasks</th>
+        <th>Number of tasks correct</th>
+        <th>Time remaining</th>
+    </tr>
+    <tr>
+        <td>
+            {{ Constants.num_rounds }}
+        </td>
+        <td>
+            {{ number_correct }}
+        </td>
+        <td>
+            {% if time_left <= 0 %}
+                0 seconds
+            {% else %}
+                {{ time_left|to0 }} seconds
+            {% endif %}
+        </td>
+    </tr>
+    </table>
+    {% endif %}
+<br>
+    {% next_button %}
+
+{% endblock %}
+

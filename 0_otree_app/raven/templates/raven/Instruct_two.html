@@ -1,0 +1,53 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree %}
+
+{% block title %}
+    Instructions (Page 2/2)
+{% endblock %}
+
+{% block content %}
+    <br>
+    <div class="card card-body bg-light instructions">
+    <ul>
+        <li>
+            Each IQ task involves looking at a picture and finding the missing piece.
+        </li>
+        <li>
+            Once you find it, please enter its corresponding number in the box below the picture.
+        </li>
+        <li>
+            Please consider the example picture below and observe that the correct missing piece is number 5.
+        </li>
+    </ul>
+</div>
+    <br>
+    <div align="center">
+    <img id="image" width="35%" src="{% static 'raven/example.png' %}" />
+    <br>
+    <br>
+    <p>
+        <b>Please enter the correct number corresponding to the missing piece of the example picture to continue.</b>
+    </p>
+    <p>
+        <input type="number" id="Instr2" name="Instr2" min="1" max="6" step="1">
+    </p>
+    <button onclick="return myFunction()" class="otree-btn-next btn btn-primary">Next</button>
+
+    </div>
+    <input type="hidden" name="Instr2_wrong" value="0" id="Instr2_wrong" />
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+function myFunction() {
+    if (document.getElementById('Instr2').value !== "5") {
+        alert("Your answer is incorrect. Please read the instructions carefully and provide the correct answer.");
+        $('#Instr2_wrong').val(1);
+        return false;
+    }
+    if (document.getElementById('Instr2').value === "5") {
+        return true;
+    }
+}
+</script>
+{% endblock %}

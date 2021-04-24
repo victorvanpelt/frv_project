@@ -1,0 +1,66 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree %}
+
+{% block title %}
+    Instructions (Page 3/3)
+{% endblock %}
+
+{% block content %}
+    <style>
+    .otree-timer {
+        display: none;
+    }
+    </style>
+    <div align="center">
+        <img width="40%" src="{% static "coll_dishonest/die_roll_picture_c.jpg" %}"/>
+    </div>
+    <br>
+    <div class="card card-body bg-light instructions">
+    <ul>
+        <li>
+            For this second part, both you and the other participant can earn an additional amount depending on how both of you report about your die roll outcome.
+        </li>
+        <li>
+            Specifically, each of you receives additional earnings if both of you report the same outcome. Neither of you will get additional earnings if you report different outcomes.
+        </li>
+        <li>
+            Please examine the overview displayed above.
+        </li>
+    </ul>
+</div>
+<br>
+    <p>
+        <b>Please evaluate the following statement to continue.</b>
+    </p>
+    <p>
+        {% formfield player.Instr3 label="I and the other participant can earn an additional amount depending on how we report about our die roll outcome." %}
+    </p>
+    <input type="hidden" name="Instr3_wrong" value="0" id="Instr3_wrong" />
+<br>
+<button onclick="return myFunction()" class="otree-btn-next btn btn-primary">Next</button>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(function () {
+        $('.otree-timer__time-left').on('update.countdown', function (event) {
+            if (event.offset.totalSeconds === 30) {
+                $('.otree-timer').show();
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+function myFunction() {
+    if (document.getElementById('Instr3-1').checked) {
+        alert("Your answer is incorrect. Please read the instructions carefully and provide the correct answer.");
+        $('#Instr3_wrong').val(1);
+        return false;
+    }
+    if (document.getElementById('Instr3-0').checked) {
+        return true;
+    }
+}
+</script>
+{% endblock %}

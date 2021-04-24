@@ -1,0 +1,64 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree %}
+
+{% block title %}
+    Part 1 - Instructions (Page 1/2)
+{% endblock %}
+
+{% block content %}
+    <br>
+    <div class="card card-body bg-light instructions">
+    <ul>
+        <li>
+            In this first part, we ask you and one other participant to complete as many as 10 tasks from an Intelligence Quotient (IQ) test as possible within 5 minutes.
+        </li>
+        <li>
+            IQ represents a person’s reasoning ability and intelligence relative to others or a peer group.
+        </li>
+        {% if player.incentives == 0 %}
+            <li>
+                Both of you will receive $0.90 each for completing this first part.
+            </li>
+        {% elif player.incentives == 1 %}
+            <li>
+                For this first part, the participant who completes the most IQ tasks correctly will receive $1.80 and the other participant will receive $0.00. In case of a tie, the faster participant will receive $1.80 and the other participant $0.00.
+            </li>
+        {%  endif %}
+        {% if player.rpi == 1 %}
+        <li>
+            After part 1 but before part 2, you will observe whether you performed better or worse on the IQ tasks than the other participant.
+        </li>
+        {% elif player.rpi == 0 %}
+        <li>
+            After both part 1 and 2, you will observe whether you performed better or worse on the IQ tasks than the other participant.
+        </li>
+        {% endif %}
+    </ul>
+</div>
+<br>
+    <p>
+        <b>Please evaluate the following statement correctly to continue.</b>
+    </p>
+    <p>
+        {% formfield player.Instr1 label="The tasks featured in this first stage are taken from an Intelligence Quotient (IQ) test." %}
+    </p>
+    <input type="hidden" name="Instr1_wrong" value="0" id="Instr1_wrong" />
+<br>
+<button onclick="return myFunction()" class="otree-btn-next btn btn-primary">Next</button>
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+function myFunction() {
+    if (document.getElementById('Instr1-1').checked) {
+        alert("Your answer is incorrect. Please read the instructions carefully and provide the correct answer.");
+        $('#Instr1_wrong').val(1);
+        return false;
+    }
+    if (document.getElementById('Instr1-0').checked) {
+        return true;
+    }
+}
+</script>
+{% endblock %}

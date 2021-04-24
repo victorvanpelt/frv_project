@@ -1,0 +1,30 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree %}
+
+{% block title %}
+    Almost done!
+{% endblock %}
+
+{% block content %}
+    <div class="card card-body bg-light instructions" style="text-align:center">
+        The study is now almost over.<br>
+        To complete the study, please answer the questions below.
+    </div>
+    <br>
+    <table class="table">
+    {% for field in form %}
+        <tr>
+            <td>
+                {{ field.label }}
+            </td>
+            <td>
+                {{ field }}
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+    <hr>
+    {% next_button %}
+
+{% endblock %}
+

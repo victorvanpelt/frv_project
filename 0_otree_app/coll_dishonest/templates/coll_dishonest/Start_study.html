@@ -1,0 +1,65 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Part 2 - Please be aware!
+{% endblock %}
+
+{% block content %}
+    <style>
+    .otree-timer {
+        display: none;
+    }
+    </style>
+    <div class="card card-body bg-light instructions" align="center">
+        You are about start part 2 of this study.<br>
+        Please click “Next” to start.
+    </div>
+    <br>
+    <div class="container" align="center">
+    {% next_button %}
+    <br>
+        <button id="button" type="button" data-text-swap="Hide Instruction Overview" data-bs-toggle="collapse" class="btn btn-primary" style="color: rgb(255,255,255); background-color: rgb(0,123,255);" data-bs-target="#collapsed_instructions">Show Instruction Overview</button>
+    </div>
+    <div id="collapsed_instructions" class="collapse">
+    <br>
+    <div class="card card-body bg-light instructions" align="left" id="message">
+    <ul>
+        <li>
+            In this second part, you will interact with the same participant as in the first part.
+        </li>
+        <li>
+            Both of you separately roll a six-sided dice and observe its outcome privately. Each of its six numbers are equally likely, and the other participant will only observe the outcome of their die roll and not yours.
+        </li>
+        <li>
+            One of you (the first mover) will privately roll their die and report about its outcome first. The other (the second mover) will observe what the first mover reported and will roll their own die privately and report about its outcome second. The computer randomly assigned who is the first mover and who is the second mover.
+        </li>
+        <li>
+            For this second part, both you and the other participant can earn an additional amount depending on how both of you report about your die roll outcome. Specifically, each of you receives additional earnings if both of you report the same outcome. Neither of you will get additional earnings if you report different outcomes.
+        </li>
+    </ul>
+    </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        $(function () {
+            $('.otree-timer__time-left').on('update.countdown', function (event) {
+                if (event.offset.totalSeconds === 25) {
+                    $('.otree-timer').show();
+                }
+            });
+        });
+    </script>
+    <script>
+        var button = document.getElementById("button");
+        button.addEventListener('click', function() {
+            if (button.getAttribute("data-text-swap") == button.innerHTML) {
+                button.innerHTML = button.getAttribute("data-text-original");
+            } else {
+                button.setAttribute("data-text-original", button.innerHTML);
+                button.innerHTML = button.getAttribute("data-text-swap");
+            }
+        }, false);
+    </script>
+{% endblock %}

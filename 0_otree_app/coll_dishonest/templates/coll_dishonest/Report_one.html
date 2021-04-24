@@ -1,0 +1,56 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Part 2 - Die roll and report
+{% endblock %}
+
+{% block content %}
+    <style>
+    .otree-timer {
+        display: none;
+    }
+    </style>
+    <div class="card card-body bg-light instructions" align="center">
+        You have been assigned to the role of first mover.
+        <br>
+        The other participant, who fulfills the role of second mover, will observe your report before rolling their die and reporting their outcome.
+    </div>
+        <br>
+    <div class="card card-body bg-light instructions" align="center">
+        Please click <a href="https://www.google.com/search?q=dice+roller" target="_blank" rel="noopener noreferrer">HERE</a> to roll your die.
+    </div>
+    <br>
+    <div align="center">
+    <p>
+        Please report about the outcome of your die in the box below.
+    </p>
+        <input type="number" id="report_one" name="report_one" min="1" max="6" step="1">
+    <br>
+            <br>
+        {% next_button %}
+    </div>
+        <input type="hidden" name="check_report_one" value="" id="id_check_report_one"/>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(function () {
+        $('.otree-timer__time-left').on('update.countdown', function (event) {
+            if (event.offset.totalSeconds === 30) {
+                $('.otree-timer').show();
+            }
+        });
+    });
+</script>
+<script>
+	$(document).ready(function () {
+        $('input[name=report_one]').on('input change', function () {
+            $('input[name=report_one]').addClass('myclass');
+        });
+	    $('input[name=report_one]').on('input', function() {
+        	$('#id_check_report_one').val(1);
+    	});
+    });
+</script>
+{% endblock %}

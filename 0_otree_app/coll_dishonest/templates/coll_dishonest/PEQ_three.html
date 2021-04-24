@@ -1,0 +1,46 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree %}
+
+{% block title %}
+    Almost done (Page 3/3)
+{% endblock %}
+
+{% block content %}
+{#    <style>#}
+{#    .otree-timer {#}
+{#        display: none;#}
+{#    }#}
+{#    </style>#}
+{#    <div class="card card-body bg-light instructions" style="text-align:center">#}
+{#        The study is now almost over.<br>#}
+{#        To complete the study, please answer the questions below.#}
+{#    </div>#}
+{#    <br>#}
+    <table class="table">
+    {% for field in form %}
+        <tr>
+            <td>
+                {{ field.label }}
+            </td>
+            <td>
+                {{ field }}
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+    <hr>
+    {% next_button %}
+
+{% endblock %}
+{#{% block scripts %}#}
+{#    <script>#}
+{#    $(function () {#}
+{#        $('.otree-timer__time-left').on('update.countdown', function (event) {#}
+{#            if (event.offset.totalSeconds === 30) {#}
+{#                $('.otree-timer').show();#}
+{#            }#}
+{#        });#}
+{#    });#}
+{#</script>#}
+{#{% endblock %}#}
+

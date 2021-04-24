@@ -1,0 +1,65 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Part 1 - Please be aware!
+{% endblock %}
+
+{% block content %}
+    <div class="card card-body bg-light instructions" align="center" id="message">
+        You will have 5 minutes to complete as many of the 10 IQ tasks as possible.<br>
+        Please click "Next" to start.
+    </div>
+    <br>
+    <div class="container" align="center">
+    {% next_button %}
+    <br>
+    <div class="container" align="center">
+        <button id="button" type="button" data-text-swap="Hide Instruction Overview" data-bs-toggle="collapse" class="btn btn-primary" style="color: rgb(255,255,255); background-color: rgb(0,123,255);" data-bs-target="#collapsed_instructions">Show Instruction Overview</button>
+    </div>
+    <div id="collapsed_instructions" class="collapse">
+    <br>
+    <div class="card card-body bg-light instructions" align="left" id="message">
+    <ul>
+        <li>
+            In this first part, we ask you and one other participant complete as many of 10 tasks from an Intelligence Quotient (IQ) test as possible within 5 minutes.
+        </li>
+        <li>
+            Each IQ task involves looking at a picture and finding the missing piece. Once you find it, please enter its corresponding number in the box below the picture.
+        </li>
+        {%  if player.incentives == 0 %}
+            <li>
+                Both of you will receive $0.90 each for completing this first part.
+            </li>
+        {% elif player.incentives == 1 %}
+            <li>
+                For this first part, the participant who completes the most IQ tasks correctly will receive $1.80 and the other participant will receive $0.00. In case of a tie, the faster participant will receive $1.80 and the other participant $0.00.
+            </li>
+        {%  endif %}
+        {% if player.rpi == 1 %}
+        <li>
+            After part 1 but before part 2, you will observe whether you performed better or worse on the IQ tasks than the other participant.
+        </li>
+        {% elif player.rpi == 0 %}
+        <li>
+            After both part 1 and 2, you will observe whether you performed better or worse on the IQ tasks than the other participant.
+        </li>
+        {% endif %}
+    </ul>
+    </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        var button = document.getElementById("button");
+        button.addEventListener('click', function() {
+            if (button.getAttribute("data-text-swap") == button.innerHTML) {
+                button.innerHTML = button.getAttribute("data-text-original");
+            } else {
+                button.setAttribute("data-text-original", button.innerHTML);
+                button.innerHTML = button.getAttribute("data-text-swap");
+            }
+        }, false);
+    </script>
+{% endblock %}

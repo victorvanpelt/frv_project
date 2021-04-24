@@ -1,0 +1,124 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Part 1 - Results
+{% endblock %}
+
+{% block content %}
+        <style>
+    .otree-timer {
+        display: none;
+    }
+    </style>
+    <div class="card card-body bg-light instructions" align="center">
+    {% for p in player.in_all_rounds %}
+    {% if p.id_in_group == 1 %}
+        You scored {{ group.number_correct_one }} out of 10.<br>
+        {% if group.time_left_one <= 0 %}
+                You had 0 seconds remaining.
+        {% else %}
+                You had {{ group.time_left_one|to0 }} seconds remaining.
+        {% endif %}
+    {% elif p.id_in_group == 2 %}
+        You scored {{ group.number_correct_two }} out of 10.<br>
+        {% if group.time_left_two <= 0 %}
+                You had 0 seconds remaining.
+        {% else %}
+                You had {{ group.time_left_two|to0 }} seconds remaining.
+        {% endif %}
+    {% endif %}
+    <br>
+    {% endfor %}
+    </div>
+    <br>
+    {% if group.rpi == 1 %}
+    <div align="center">
+        {% if group.winner_part1_one == 1 and player.id_in_group == 1 or group.winner_part1_two == 1 and player.id_in_group == 2 %}
+            You performed better than the other participant on the IQ tasks in part 1.
+        {% elif group.winner_part1_two == 1 and player.id_in_group == 1 or group.winner_part1_one == 1 and player.id_in_group == 2 %}
+            The other participant performed better than you on the IQ tasks in part 1.
+        {% endif %}
+    </div><br>
+    {% for p in player.in_all_rounds %}
+    {% if p.id_in_group == 1 %}
+    <table class="table">
+    <tr>
+        <th>Your rank</th>
+        <th>Other participant's rank</th>
+        <th>Your earnings</th>
+        <th>Other participant's earnings</th>
+    </tr>
+    <tr>
+        <td>
+            {% if group.winner_part1_one == 1 %}
+                1st
+            {% elif group.winner_part1_one == 0 %}
+                2nd
+            {% endif %}
+        </td>
+        <td>
+            {% if group.winner_part1_two == 1 %}
+                1st
+            {% elif group.winner_part1_two == 0 %}
+                2nd
+            {% endif %}
+        </td>
+        <td>
+            {{ payoff_part1_one }}
+        </td>
+        <td>
+            {{ payoff_part1_two }}
+        </td>
+    </tr>
+    </table>
+    {% elif p.id_in_group == 2 %}
+    <table class="table">
+    <tr>
+        <th>Your rank</th>
+        <th>Other participant's rank</th>
+        <th>Your earnings</th>
+        <th>Other participant's earnings</th>
+    </tr>
+    <tr>
+        <td>
+            {% if group.winner_part1_two == 1 %}
+                1st
+            {% elif group.winner_part1_two == 0 %}
+                2nd
+            {% endif %}
+        </td>
+        <td>
+            {% if group.winner_part1_one == 1 %}
+                1st
+            {% elif group.winner_part1_one == 0 %}
+                2nd
+            {% endif %}
+        </td>
+        <td>
+            {{ payoff_part1_two }}
+        </td>
+        <td>
+            {{ payoff_part1_one }}
+        </td>
+    </tr>
+    </table>
+    {% endif %}
+    {% endfor %}
+    <br>
+    {% endif %}
+    {% next_button %}
+
+{% endblock %}
+{% block scripts %}
+<script>
+    $(function () {
+        $('.otree-timer__time-left').on('update.countdown', function (event) {
+            if (event.offset.totalSeconds === 30) {
+                $('.otree-timer').show();
+            }
+        });
+    });
+</script>
+{% endblock %}
+
