@@ -4,7 +4,7 @@ set more off
 
 
 /* please set directory first! */
-cd "C:\Users\victo\Dropbox\Research\Projects\Rainer, Victor, and Farah\ACCDIN_CoordinatedDishonestyinReporting\04analyses"
+cd "C:\Users\victo\Dropbox\Research\Projects\Rainer, Victor, and Farah\ACCDIN_CoordinatedDishonestyinReporting\frv_project"
 
 
 
@@ -12,6 +12,15 @@ cd "C:\Users\victo\Dropbox\Research\Projects\Rainer, Victor, and Farah\ACCDIN_Co
 import excel using "1_input\all_sessions.xlsx", firstrow
 
 /* Variable naming */
+
+//rename demographics
+rename coll_dishonest1playergender gender
+rename coll_dishonest1playerage age
+rename coll_dishonest1playerenglish english
+rename coll_dishonest1playerrisk risk
+rename coll_dishonest1playertrustwor trustworthy
+rename coll_dishonest1playertrusting trusting
+rename coll_dishonest1playercorona corona_fear
 
 // Generate base variables and identifiers
 gen id = _n
@@ -29,15 +38,7 @@ replace treatment=4 if rpi==1 & prize_spread==1
 rename coll_dishonest1playerincentiv prize_spread_check
 rename coll_dishonest1playerrpi_chec rpi_check
 rename coll_dishonest1groupid_in_sub group_id_old
-
-//rename demographics
-rename coll_dishonest1playergender gender
-rename coll_dishonest1playerage age
-rename coll_dishonest1playerenglish english
-rename coll_dishonest1playerrisk risk
-rename coll_dishonest1playertrustwor trustworthy
-rename coll_dishonest1playertrusting trusting
-rename coll_dishonest1playercorona corona_fear
+gen male=(gender==1)
 
 
 
@@ -67,6 +68,10 @@ gen group_full = (exclude==0)
 by sessioncode group_id_old: replace group_full = 0 if id_in_group==1 & exclude[_n+1]==1 
 by sessioncode group_id_old: replace group_full = 0 if id_in_group==2 & exclude[_n-1]==1 
 
+//drop if timed_out
+histogram time
+sum time, d
+
 // 272 obs total (100%) - 69 obs excluded (56%) = 154 obs usable sample (44%)
 sum id if exclude==0
 sum id if exclude==1
@@ -75,11 +80,6 @@ drop if exclude==1
 // No duplicates
 duplicates examples
 
-//drop if timed_out
-histogram time
-sum time, d
-list sessioncode if time>1000
-list session_id
 
 
 /* Manipulation Checks and Randomization */
@@ -89,7 +89,7 @@ ttest rpi_check, by(rpi)
 ttest prize_spread_check, by(prize_spread)
 
 //Check randomization
-regress gender i.treatment
+regress male i.treatment
 regress age i.treatment
 regress english i.treatment
 regress risk i.treatment
@@ -119,13 +119,22 @@ ttest report_two==3.5 if rpi==1 & prize_spread==0 & group_full==1 & id_in_group=
 ttest report_two==3.5 if rpi==0 & prize_spread==1 & group_full==1 & id_in_group==1
 ttest report_two==3.5 if rpi==1 & prize_spread==1 & group_full==1 & id_in_group==1
 
-// logit regression of corrup collaboration on treatments
+// Descriptive statistics for collective dishonesty
 sum dish_coll if group_full==1 & rpi==0 & prize_spread==0 & id_in_group==1
 sum dish_coll if group_full==1 & rpi==1 & prize_spread==0 & id_in_group==1
 sum dish_coll if group_full==1 & rpi==0 & prize_spread==1 & id_in_group==1
 sum dish_coll if group_full==1 & rpi==1 & prize_spread==1 & id_in_group==1
 
-sum session_id
+//Not really any simple effects
+tabulate dish_coll prize_spread if group_full==1 & rpi==0 & id_in_group==1, chi2
+tabulate dish_coll rpi if group_full==1 & prize_spread==0 & id_in_group==1, chi2
+tabulate dish_coll rpi if group_full==1 & prize_spread==1 & id_in_group==1, chi2
+tabulate dish_coll prize_spread if group_full==1 & rpi==1 & id_in_group==1, chi2
+
+//Also no difference between absent/absent and present/present
+tabulate dish_coll treatment if group_full==1 & treatment!=2 & treatment!=3 & id_in_group==1, chi2
+
+// (logit) regression of corrup collaboration on treatments
 //anova dish_coll rpi##prize_spread if group_full==1 & id_in_group==1
 regress dish_coll rpi##prize_spread if group_full==1 & id_in_group==1, r
 eststo: logistic dish_coll rpi##prize_spread if group_full==1 & id_in_group==1, r
@@ -133,5 +142,9 @@ esttab using "3_output\Table 2.rtf", ///
 replace stats(r2_p chi2 p df_m N) b(3) aux(se 3) star(* 0.10 ** 0.05 *** 0.01) obslast onecell nogaps ///
 compress title(Table 5 - Logistic Regression) addnotes(p-levels are two-tailed, * p < 0.10, ** p < 0.05, *** p < 0.01; the numbers within the round parentheses are robust standard errors.) nonotes
 eststo clear
+
+//With controls
+regress dish_coll rpi##prize_spread male age english risk trustworthy trusting corona_fear if group_full==1 & id_in_group==1, r
+logistic dish_coll rpi##prize_spread male age english risk trustworthy trusting corona_fear if group_full==1 & id_in_group==1, r
 
 exit, STATA clear
