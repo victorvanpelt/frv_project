@@ -4,8 +4,8 @@ set more off
 
 
 /* please set directory first! */
+//cd "C:\Users\Farah\Dropbox\ACCDIN_CoordinatedDishonestyinReporting\ACCDIN_CoordinatedDishonestyinReporting\frv_project"
 cd "C:\Users\victo\Dropbox\Research\Projects\Rainer, Victor, and Farah\ACCDIN_CoordinatedDishonestyinReporting\frv_project"
-
 
 
 /* Import data and file management */
@@ -46,6 +46,8 @@ rename coll_dishonest1playerrpi_chec rpi_check
 rename coll_dishonest1groupid_in_sub group_id_old
 gen male=(gender==1)
 gen female=(gender==2)
+replace male=. if gender==3
+replace female=. if gender==3
 rename coll_dishonest1groupwinner_pa one_won
 rename HC two_won
 rename GX number_correct_two
@@ -128,6 +130,7 @@ sort sessioncode group_id id_in_group
 //How long did they take? Few outliers, but leaving them in.
 histogram time
 sum time, d
+gen long_time=(time>948)
 
 //Check whether interventions worked
 ttest rpi_check, by(rpi)
@@ -147,17 +150,10 @@ save "2_process\all_session_total_clean.dta", replace
 
 
 
-
-
-
-
-
-
-
 /* Analyses */
 
 // Descriptive Statistics per Treatment
-estpost tabstat report_one report_two dish_coll if id_in_group==1, statistics(mean sd min max n) by(treatment)
+estpost tabstat report_one report_two dish_coll if group_full==1 & id_in_group==1, statistics(mean sd min max n) by(treatment)
 esttab using "3_output\Table 1.rtf", replace cells("report_one report_two dish_coll") noobs nomtitle nonumber eqlabels("No RPI / No Prize Spread" "RPI / No Prize Spread" "No RPI / Prize Spread" "RPI / Prize Spread") varwidth(20)
 
 // ttests against 3.5 average per treatment
@@ -187,8 +183,8 @@ tabulate dish_coll prize_spread if group_full==1 & rpi==1 & id_in_group==2, chi2
 tabulate dish_coll treatment if group_full==1 & treatment!=2 & treatment!=3 & id_in_group==2, chi2
 
 // (logit) regression of player 2 collaborating on treatments
-regress dish_coll report_one rpi##prize_spread if group_full==1 & id_in_group==2, r
-eststo: logistic dish_coll report_one rpi##prize_spread if group_full==1 & id_in_group==2, r
+regress dish_coll report_one two_won rpi##prize_spread if group_full==1 & id_in_group==2, r
+eststo: logistic dish_coll two_won report_one rpi##prize_spread if group_full==1 & id_in_group==2, r
 
 //With controls
 regress dish_coll report_one rpi##prize_spread male age english risk trustworthy trusting corona_fear if group_full==1 & id_in_group==1, r
@@ -206,11 +202,22 @@ sum dish_coll if group_full==1 & rpi==0 & prize_spread==0 & id_in_group==2 & two
 sum dish_coll if group_full==1 & rpi==1 & prize_spread==0 & id_in_group==2 & two_won==1
 sum dish_coll if group_full==1 & rpi==0 & prize_spread==1 & id_in_group==2 & two_won==1
 sum dish_coll if group_full==1 & rpi==1 & prize_spread==1 & id_in_group==2 & two_won==1
+
+// TWO_WON IS A CONFOUND IN RPI!
+// Just bad luck: Failure to randomize!
+pwcorr two_won rpi if group_full==1 & id_in_group==2, sig
+
 // (Logit) regressions
 regress dish_coll report_one rpi##prize_spread if group_full==1 & two_won==1 & id_in_group==2, r
+margins, dydx(_all) atmeans 
+margins, dydx(rpi) at(prize_spread==1)
+margins, dydx(rpi) at(prize_spread==0)
 eststo: logistic dish_coll report_one rpi##prize_spread if group_full==1 & two_won==1 & id_in_group==2, r
 
 regress dish_coll report_one rpi##prize_spread if group_full==1 & two_won==0 & id_in_group==2, r
+margins, dydx(_all) atmeans 
+margins, dydx(prize_spread) at(rpi==1)
+margins, dydx(prize_spread) at(rpi==0)
 eststo: logistic dish_coll report_one rpi##prize_spread if group_full==1 & two_won==0 & id_in_group==2, r
 
 // Export the three logistic regressions (all, second mover won, second mover lost)
@@ -227,6 +234,28 @@ eststo: regress report_one rpi##prize_spread if group_full==1 & one_won==0 & id_
 esttab using "3_output\Table 3.rtf", replace stats(r2_a F p df_m N) b(3) aux(se 3) star(* 0.10 ** 0.05 *** 0.01) obslast onecell nogaps ///
 compress title(Table 5 - OLS Regressions of First Mover Report) addnotes(p-levels are two-tailed, * p < 0.10, ** p < 0.05, *** p < 0.01; the numbers within the round parentheses are robust standard errors.) nonotes
 eststo clear
+
+
+//FARAH
+//three way interaction with two_won
+regress dish_coll report_one rpi##prize_spread##two_won if group_full==1 & id_in_group==2, r
+eststo: logistic dish_coll report_one rpi##prize_spread##two_won if group_full==1 & id_in_group==2, r
+
+//first mover analysis
+eststo: regress report_one rpi##one_won if group_full==1 & id_in_group==1 & prize_spread==0, r
+eststo: regress report_one rpi##one_won if group_full==1 & id_in_group==1 & prize_spread==1, r
+
+////first mover analysis with three way interaction
+eststo: regress report_one rpi##prize_spread##one_won if group_full==1 & id_in_group==1, r
+
+//first mover analysis in terms of score
+sum number_correct_one , d
+gen d_score = ( number_correct_one>=r(p50))
+eststo: regress report_one rpi##d_score if group_full==1 & id_in_group==1 & prize_spread==1, r
+eststo: regress report_one rpi##d_score if group_full==1 & id_in_group==1 & prize_spread==0, r
+
+
+
 
 /*
 // JUST SAVED NOTES FOR VICTOR (CAN BE REMOVED)
