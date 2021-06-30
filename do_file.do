@@ -203,9 +203,20 @@ sum dish_coll if group_full==1 & rpi==1 & prize_spread==0 & id_in_group==2 & two
 sum dish_coll if group_full==1 & rpi==0 & prize_spread==1 & id_in_group==2 & two_won==1
 sum dish_coll if group_full==1 & rpi==1 & prize_spread==1 & id_in_group==2 & two_won==1
 
+//Not really any simple effects
+tabulate dish_coll prize_spread if group_full==1 & rpi==0 & id_in_group==2 & two_won==1, chi2
+tabulate dish_coll rpi if group_full==1 & prize_spread==0 & id_in_group==2 & two_won==1, chi2
+tabulate dish_coll rpi if group_full==1 & prize_spread==1 & id_in_group==2 & two_won==1, chi2
+tabulate dish_coll prize_spread if group_full==1 & rpi==1 & id_in_group==2 & two_won==1, chi2
+
+tabulate dish_coll prize_spread if group_full==1 & rpi==0 & id_in_group==2 & two_won==0, chi2
+tabulate dish_coll rpi if group_full==1 & prize_spread==0 & id_in_group==2 & two_won==0, chi2
+tabulate dish_coll rpi if group_full==1 & prize_spread==1 & id_in_group==2 & two_won==0, chi2
+tabulate dish_coll prize_spread if group_full==1 & rpi==1 & id_in_group==2 & two_won==0, chi2
+
 // TWO_WON IS A CONFOUND IN RPI!
 // Just bad luck: Failure to randomize!
-pwcorr two_won rpi if group_full==1 & id_in_group==2, sig
+pwcorr two_won prize_spread rpi if group_full==1 & id_in_group==2, sig
 
 // (Logit) regressions
 regress dish_coll report_one rpi##prize_spread if group_full==1 & two_won==1 & id_in_group==2, r
@@ -255,7 +266,7 @@ eststo: regress report_one rpi##d_score if group_full==1 & id_in_group==1 & priz
 eststo: regress report_one rpi##d_score if group_full==1 & id_in_group==1 & prize_spread==0, r
 
 
-
+regress dish_coll report_one rpi##prize_spread two_won if group_full==1 & id_in_group==2, r
 
 /*
 // JUST SAVED NOTES FOR VICTOR (CAN BE REMOVED)
