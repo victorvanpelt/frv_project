@@ -74,7 +74,7 @@ class Player(BasePlayer):
     task = models.IntegerField(initial=0, min=1, max=8)
     check_task = models.IntegerField(initial=None, blank=True)
 
-    number_correct = models.IntegerField(initial=None, min=0, max=Constants.num_rounds)
+    number_correct = models.IntegerField(initial=None, min=0, max=C.NUM_ROUNDS)
     time_left = models.FloatField(initial=None)
 
     def set_score(self):

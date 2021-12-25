@@ -222,25 +222,25 @@ class Player(BasePlayer):
     corona = models.IntegerField(
         label="I am worried about the Corona virus (COVID2019).",
         blank=False,
-        choices=Constants.AgreeChoices
+        choices=C.AGREECHOICES
     )
 
     incentives_check = models.IntegerField(
         label="The other participant and I received the same earnings in part 1.",
         blank=False,
-        choices=Constants.AgreeChoices
+        choices=C.AGREECHOICES
     )
 
     rpi_check = models.IntegerField(
         label="I knew both my individual rank and the other participant’s individual rank in part 1 before we continued to part 2.",
         blank=False,
-        choices=Constants.AgreeChoices
+        choices=C.AGREECHOICES
     )
 
     attention_check = models.IntegerField(
         label="If you’re still paying attention, please select “Disagree.”",
         blank=False,
-        choices=Constants.AgreeChoices
+        choices=C.AGREECHOICES
     )
 
     gender = models.IntegerField(
@@ -295,19 +295,19 @@ class Player(BasePlayer):
     competitive_one = models.IntegerField(
         label="It was important to me to score higher than the other participant in part 1.",
         blank=False,
-        choices=Constants.AgreeChoices
+        choices=C.AGREECHOICES
     )
 
     competitive_two = models.IntegerField(
         label="I worked hard to score higher than the other participant in part 1.",
         blank=False,
-        choices=Constants.AgreeChoices
+        choices=C.AGREECHOICES
     )
 
     competitive_three = models.IntegerField(
         label="I cared about scoring more than the other participant in part 1.",
         blank=False,
-        choices=Constants.AgreeChoices
+        choices=C.AGREECHOICES
     )
 
     #SSS

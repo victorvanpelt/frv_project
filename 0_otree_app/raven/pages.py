@@ -41,7 +41,7 @@ class Task(Page):
     timer_text = 'Total time left:'
 
     def is_displayed(self):
-        return self.round_number < Constants.num_rounds and self.player.participant.no_time_left == False
+        return self.round_number < C.NUM_ROUNDS and self.player.participant.no_time_left == False
 
     def get_timeout_seconds(self):
         participant = self.player.participant
@@ -64,7 +64,7 @@ class Task_last(Page):
     timer_text = 'Total time left:'
 
     def is_displayed(self):
-        return self.round_number == Constants.num_rounds and self.player.participant.no_time_left == False
+        return self.round_number == C.NUM_ROUNDS and self.player.participant.no_time_left == False
 
     def get_timeout_seconds(self):
         participant = self.player.participant
