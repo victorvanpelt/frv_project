@@ -1,6 +1,6 @@
 # oTree-may-overwrite-this-file
 # IF YOU MODIFY THIS FILE, remove these comments. 
 # otherwise, oTree will automatically overwrite it.
-otree[mturk]>=5.1.5
+otree[mturk]>=5.7.0
 psycopg2>=2.8.5
 sentry-sdk>=0.7.9
